@@ -1,0 +1,22 @@
+{
+  "name": "media-kodi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domojs/media-kodi.git"
+  },
+  "author": "npenin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/domojs/media-kodi/issues"
+  },
+  "homepage": "https://github.com/domojs/media-kodi#readme",
+  "dependencies": {
+    "json-rpc-ws": "^2.0.4"
+  }
+}
