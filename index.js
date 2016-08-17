@@ -17,6 +17,12 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                     if( typeof ( kodi[ ns[ 0 ] ] ) == 'undefined' )
                         kodi[ ns[ 0 ] ] = {};
                     kodi[ ns[ 0 ] ][ ns[ 1 ] ] = function( params, callback ) {
+                        if( !kodi.isConnected() )
+                        {
+                            socket.emit('iamnotaplayer');
+                            callback( new Error( 'Not connected' ) );
+                            return;
+                        }
                         if( typeof ( callback ) == 'undefined' && typeof ( params ) == 'function' ) {
                             callback = params;
                             params = {};
@@ -82,29 +88,52 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                     }
                 });
 
+                var timer = false;
+                function startTimer() {
+                    if( timer )
+                        return;
+                    timer = setInterval( function() {
+                        commands.status();
+                    }, 1000 )
+                }
+
+                function stopTimer() {
+                    clearInterval( timer );
+                    timer = false;
+                }
+
                 var commands = {
                     play: function( media ) {
                         debug( media );
                         if( typeof ( media ) != 'undefined' ) {
-                            if( !media || isNaN( Number( media ) ) ) {
-                                media = decodeURIComponent( media );
-                                media = media.replace( /file:\/\/\/\/\//, 'smb://' );
+                            if( !media || isNaN( Number( media.path ) ) ) {
+                                media.path = decodeURIComponent( media.path );
+                                media.path = media.path.replace( /file:\/\/\/\/\//, 'smb://' );
                                 debug( media );
-                                kodi.Player.Open( { item: { file: media } }, function( err, reply ) {
-                                    kodi.Player.GetActivePlayers( function( err, players ) {
-                                        if( players && players.length > 0 ) {
-                                            kodi.Player.GetProperties( { playerid: players[ 0 ].playerid, properties: [ 'playlistid' ] }, function( err, properties ) {
-                                                debug( properties );
-                                                if( !err && typeof ( properties.playlistid ) != 'undefined' ) {
-                                                    kodi.Playlist.Add({playlistid:properties.playlistid, item:{file:media}}, function(){
-
-                                                    })
-                                                }
+                                kodi.Playlist.GetPlaylists( function( err, result ) {
+                                    if( err )
+                                        debug( err );
+                                    else {
+                                        debug( result );
+                                        var mediaType = media.id.substring( 'media:'.length, media.id.indexOf( ':', 'media:'.length ) );
+                                        debug( mediaType );
+                                        if( result && result.items ) {
+                                            var playlist = $.grep( result.items, function( e ) {
+                                                return e.type == mediaType;
+                                            })[ 0 ];
+                                            if( !err && typeof ( playlist ) != 'undefined' ) {
+                                                kodi.Playlist.Add( { playlistid: playlist.playlistid, item: { file: media.path } }, function() {
+                                                    startTimer();
+                                                })
+                                            }
+                                        }
+                                        else {
+                                            kodi.Player.Open( { item: { file: media.path } }, function() {
+                                                startTimer();
                                             });
                                         }
-                                    });
-                                    debug( arguments );
-                                })
+                                    }
+                                });
                             }
                             else {
                                 var self = this;
@@ -123,7 +152,12 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                         kodi.Player.GetActivePlayers( function( err, players ) {
                             if( players.length > 0 ) {
                                 debug( players );
-                                kodi.Player.PlayPause( { playerid: players[ 0 ].playerid })
+                                kodi.Player.PlayPause( { playerid: players[ 0 ].playerid }, function( err, status ) {
+                                    if( status.speed )
+                                        startTimer();
+                                    else
+                                        stopTimer();
+                                })
                             }
                         })
                     },
@@ -131,7 +165,9 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                         kodi.Player.GetActivePlayers( function( err, players ) {
                             if( players.length > 0 ) {
                                 debug( players );
-                                kodi.Player.Stop( { playerid: players[ 0 ].playerid })
+                                kodi.Player.Stop( { playerid: players[ 0 ].playerid }, function() {
+                                    stopTimer();
+                                })
                             }
                         })
                     },
@@ -183,15 +219,18 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                                 kodi.Player.GetProperties( { playerid: players[ 0 ].playerid, properties: [ 'position', 'percentage', 'repeat', 'canseek', 'time', 'totaltime', 'speed' ] }, function( err, player ) {
                                     debug( player );
                                     socket.emit( 'player.status', {
-                                        state: player.speed,
+                                        state: player.speed ? 'playing' : 'paused',
                                         position: player.percentage / 100,
                                         time: player.time.seconds + 60 * player.time.minutes + 3600 * player.time.hours,
                                         length: player.totaltime.seconds + 60 * player.totaltime.minutes + 3600 * player.totaltime.hours,
                                     });
                                 });
                             }
-                            else
+                            else {
                                 socket.emit( 'player.status', { state: 'stopped' });
+                                if( timer )
+                                    stopTimer();
+                            }
 
                         });
                     },
@@ -199,15 +238,26 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                         kodi.Player.GetActivePlayers( function( err, players ) {
                             if( players.length > 0 ) {
                                 debug( players );
-                                kodi.Player.GetProperties( { playerid: players[ 0 ].playerid, properties: [ 'playlistid' ] }, function( err, properties ) {
-                                    debug( properties );
+                                kodi.Player.GetProperties( { playerid: players[ 0 ].playerid, properties: [ 'playlistid', 'speed' ] }, function( err, properties ) {
                                     if( !err && typeof ( properties.playlistid ) != 'undefined' ) {
-                                        kodi.Playlist.GetItems( { playlistid: properties.playlistid, properties: [ 'title', 'artist', 'albumartist', 'fanart', 'plot', 'season', 'episode', 'thumbnail', 'file', 'art' ] }, function( err, playlist ) {
-                                            debug( playlist );
-                                            if( playlist && playlist.items )
-                                                socket.emit( 'player.playlist', $.map(playlist.items, function(media){
-                                                    return { uri:media.file.replace(/smb:\/\//, 'file://///')};
-                                                }) );
+                                        kodi.Player.GetItem( { playerid: players[ 0 ].playerid, properties: [ 'title', 'artist', 'albumartist', 'fanart', 'plot', 'season', 'episode', 'thumbnail', 'file', 'art' ] }, function( err, item ) {
+                                            $.extend( item.item, { current: 'current' });
+                                            if( err )
+                                                debug( err );
+                                            kodi.Playlist.GetItems( { playlistid: properties.playlistid, properties: [ 'title', 'artist', 'albumartist', 'fanart', 'plot', 'season', 'episode', 'thumbnail', 'file', 'art' ] }, function( err, playlist ) {
+                                                debug( playlist );
+                                                if( playlist && !playlist.items )
+                                                    playlist.items = [ item.item ]
+                                                else
+                                                    playlist.items.unshift( item.item );
+                                                debug( playlist.items );
+                                                if( properties.speed > 0 )
+                                                    startTimer();
+                                                if( playlist && playlist.items )
+                                                    socket.emit( 'player.playlist', $.map( playlist.items, function( media ) {
+                                                        return { uri: media.file.replace( /smb:\/\//, 'file://///' ), current: media.current };
+                                                    }) );
+                                            })
                                         })
                                     }
                                 });
@@ -243,12 +293,13 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                     kodi.Player.OnPause( function() {
                         debug( 'OnPause' )
                         commands.status();
-
+                        stopTimer();
                     });
                     kodi.Player.OnPlay( function() {
                         debug( 'OnPlay' )
                         commands.status();
                         commands.playlist();
+                        startTimer();
                     });
                     kodi.Player.OnSeek( function() {
                         debug( 'OnSeek' )
@@ -261,6 +312,7 @@ bonjour.find( { type: 'xbmc-jsonrpc' }, function( kodiService ) {
                     kodi.Player.OnStop( function() {
                         debug( 'OnStop' )
                         commands.status();
+                        stopTimer();
                     });
                 });
             }
