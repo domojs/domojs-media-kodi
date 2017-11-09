@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/domojs/media-kodi#readme",
   "dependencies": {
-    "json-rpc-ws": "^2.0.4"
+    "json-rpc-ws": "^4.0.0"
   }
 }
