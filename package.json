@@ -1,0 +1,29 @@
+{
+    "name": "@domojs/media-kodi",
+    "version": "0.0.1",
+    "description": "",
+    "main": "dist/server/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\"",
+        "build:js": "tsc -p src",
+        "build:js:routes": "browserify -x @akala/client -x @akala/core dist/client/routes.js -o dist/routes.js",
+        "build:js:tile": "browserify -x @akala/client -x @akala/core -i @domojs/theme-default/dist/tile dist/client/tile.js -o dist/tile.js",
+        "prepublishOnly": "npm run build",
+        "build": "npm run build:js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "types": "dist/server/index.d.ts",
+    "dependencies": {
+        "@akala/server": "^2.0.35"
+    },
+    "peerDependencies": {
+        "@domojs/media": "^1.1.50",
+        "@domojs/theme-default": "^1.1.20"
+    },
+    "devDependencies": {
+        "@domojs/media": "^1.1.50",
+        "@types/debug": "^0.0.30"
+    }
+}
