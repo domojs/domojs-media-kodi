@@ -16,7 +16,8 @@
     "license": "MIT",
     "types": "dist/server/index.d.ts",
     "dependencies": {
-        "@akala/server": "^2.0.35"
+        "@akala/server": "^2.0.35",
+        "@domojs/service-discovery": "^1.1.1"
     },
     "peerDependencies": {
         "@domojs/media": "^1.1.50",
