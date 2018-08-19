@@ -17,14 +17,16 @@
   "types": "dist/server/index.d.ts",
   "dependencies": {
     "@akala/server": "^2.0.35",
-    "@domojs/service-discovery": "^1.1.1"
   },
   "peerDependencies": {
     "@domojs/media": "^1.1.50",
-    "@domojs/theme-default": "^1.1.20"
+    "@domojs/theme-default": "^1.1.20",
+    "@domojs/service-discovery": "^1.1.1",
+    "@domojs/bonjour": "^1.0.2"
   },
   "devDependencies": {
     "@domojs/media": "^1.1.50",
-    "@types/debug": "^0.0.30"
+    "@types/debug": "^0.0.30",
+    "@domojs/service-discovery": "^1.1.1"
   }
 }
