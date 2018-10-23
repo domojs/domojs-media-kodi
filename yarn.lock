@@ -65,8 +65,8 @@
     levenshtein "^1.0.5"
 
 "@domojs/service-discovery@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@domojs/service-discovery/-/service-discovery-1.1.1.tgz#62062d5e704e1d0c32534f1304c9b7445ddd0e81"
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@domojs/service-discovery/-/service-discovery-1.1.6.tgz#c65af177e3097f20ee5b5201751c3cf8210f96d5"
 
 "@types/debug@^0.0.30":
   version "0.0.30"
