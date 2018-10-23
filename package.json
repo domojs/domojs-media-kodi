@@ -25,6 +25,6 @@
   },
   "devDependencies": {
     "@domojs/media": "^1.1.50",
-    "@types/debug": "^0.0.30"
+    "@types/debug": "^0.0.31"
   }
 }
