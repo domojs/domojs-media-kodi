@@ -56,8 +56,8 @@
     xml2js "^0.4.19"
 
 "@domojs/media@^1.1.50":
-  version "1.1.54"
-  resolved "https://registry.yarnpkg.com/@domojs/media/-/media-1.1.54.tgz#b867dd309ae2ef51731e644232a17b693f9c9bb0"
+  version "1.1.63"
+  resolved "https://registry.yarnpkg.com/@domojs/media/-/media-1.1.63.tgz#6ee88b14a0ed0ec3360883671acce8a038130497"
   dependencies:
     "@akala/client" "^2.0.4"
     "@akala/core" "^2.0.33"
