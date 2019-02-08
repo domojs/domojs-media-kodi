@@ -57,9 +57,9 @@ akala.injectWithNameAsync(['$agent.api/zeroconf', '$agent.api/media'], function 
         {
 
         },
-        async status(p: { target: string })
+        async status(p)
         {
-            var kodi = await kodis[p.target];
+            var kodi = await kodis[p.identity];
             var players = await kodi.Player.GetActivePlayers(null)
             if (players.length > 0)
             {
@@ -67,7 +67,7 @@ akala.injectWithNameAsync(['$agent.api/zeroconf', '$agent.api/media'], function 
                 var player = await kodi.Player.GetProperties({ playerid: players[0].playerid, properties: ['position', 'percentage', 'repeat', 'canseek', 'time', 'totaltime', 'speed'] });
                 debug.verbose(player);
                 return client.$proxy().status({
-                    identity: p.target,
+                    identity: p.identity,
                     state: player.speed ? 'playing' : 'paused',
                     position: player.percentage / 100,
                     time: player.time.seconds + 60 * player.time.minutes + 3600 * player.time.hours,
@@ -77,10 +77,10 @@ akala.injectWithNameAsync(['$agent.api/zeroconf', '$agent.api/media'], function 
             else
             {
                 client.$proxy().status({
-                    identity: p.target,
+                    identity: p.identity,
                     state: 'stopped',
                 });
-                stopTimer(p.target);
+                stopTimer(p.identity);
             }
 
         },
