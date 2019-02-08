@@ -30,7 +30,7 @@ type KodiPlaylistProxy = akala.api.ServerProxy<typeof KodiPlaylistApi>;
 
 type KodiService = sd.Service & { id: string, referer: { address: string }, port: number };
 
-akala.injectWithNameAsync(['$agent.zeroconf', '$agent.media'], function (zeroconfClient, mediaClient)
+akala.injectWithNameAsync(['$agent.api/zeroconf', '$agent.api/media'], function (zeroconfClient, mediaClient)
 {
     var kodis: { [id: string]: PromiseLike<{ Player: KodiPlayerProxy, Playlist: KodiPlaylistProxy }> } = {};
     var timers: { [id: string]: NodeJS.Timer } = {};

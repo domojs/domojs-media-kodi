@@ -3,7 +3,7 @@ import * as media from '@domojs/media';
 import { Client, Connection } from '@akala/json-rpc-ws'
 import * as fs from 'fs';
 
-akala.injectWithNameAsync(['$agent.media'], function (client: Client<Connection>)
+akala.injectWithNameAsync(['$agent.api/media'], function (client: Client<Connection>)
 {
     var s = akala.api.jsonrpcws(media.scrapper).createClient(client, {
         scrap: function (media: media.TVShow | media.Movie)
