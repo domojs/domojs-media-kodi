@@ -68,9 +68,9 @@
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@domojs/service-discovery/-/service-discovery-1.1.1.tgz#62062d5e704e1d0c32534f1304c9b7445ddd0e81"
 
-"@types/debug@^0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.30.tgz#dc1e40f7af3b9c815013a7860e6252f6352a84df"
+"@types/debug@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.0.tgz#f47877eca7cb38bbc94e716c044919bb54075828"
 
 "@types/mock-require@^2.0.0":
   version "2.0.0"
