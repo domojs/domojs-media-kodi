@@ -9,10 +9,10 @@
   optionalDependencies:
     showdown "^1.8.6"
 
-"@akala/core@^2.0.64", "@akala/core@^2.0.65":
-  version "2.0.65"
-  resolved "https://registry.yarnpkg.com/@akala/core/-/core-2.0.65.tgz#027b1bb8e457cc8883768eab0e210354435692d5"
-  integrity sha512-V2WYAzNUPcVyKEIwbViTGnk2qt8FROrstPTTMF4QeqEpEZGxg1E0c6uzvRIJmapERFkhgG2K3/NQllXHBD4l4w==
+"@akala/core@^2.0.65", "@akala/core@^2.0.66":
+  version "2.0.66"
+  resolved "https://registry.yarnpkg.com/@akala/core/-/core-2.0.66.tgz#f3b3fa07de2ced7d40fd1a19f02d01885c1b25ad"
+  integrity sha512-mwtZJdOpmDuK3cAR0uddNOOm8ai5rerAh8phwd4KJUx2K4XjNeDiZm4LQCzNW5tXC9VEJaGJDKKAZ7H1vNzOIg==
   dependencies:
     "@akala/json-rpc-ws" "^7.0.1"
     array-flatten "^2.1.1"
@@ -38,11 +38,11 @@
     ws "^6.0.0"
 
 "@akala/server@^2.1.11":
-  version "2.1.11"
-  resolved "https://registry.yarnpkg.com/@akala/server/-/server-2.1.11.tgz#d8b9e83ac080a101f49b342606cffb72c9b03b2f"
-  integrity sha512-3cPw0XKi9v4wIbbHPNLEZ94Gl4kzEfYsY7neWIRHeuChvTvcj3ecWL6woPpce9ETqOv1L5ykoKHKUPOJ9XOU4A==
+  version "2.1.15"
+  resolved "https://registry.yarnpkg.com/@akala/server/-/server-2.1.15.tgz#5047f6cc84731fd939e2710cece4dff9e868e808"
+  integrity sha512-QOIN0Pic50r7IgQFiX5KqBRG+8xll+7895h3vLozaFbwZbOjvrGiH13qiyBbQqpR1XQHe5MIRrmsQIK06PhjaQ==
   dependencies:
-    "@akala/core" "^2.0.64"
+    "@akala/core" "^2.0.66"
     "@akala/json-rpc-ws" "^7.0.0"
     body-parser "^1.18.2"
     express "^4.16.2"
